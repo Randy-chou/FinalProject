@@ -1,4 +1,10 @@
-
+/**
+ * This class manages the game state by keeping track of what entity is
+ * contained in each position on the game board.
+ * 
+ * @author harry
+ *
+ */
 public interface OceanInterface {
 
 	/**

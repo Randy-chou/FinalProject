@@ -1,6 +1,16 @@
 
+/**
+ * A ship with a length of three tiles.
+ * 
+ * @author harry
+ *
+ */
+
 public class Cruiser extends Ship {
 	
+	/**
+	 * Sets the inherited length variable and initializes the hit array, based on the size of this ship (3 tiles).
+	 */
 	public Cruiser() {
 		super();
 		length = 3;
@@ -10,6 +20,11 @@ public class Cruiser extends Ship {
 		hit[2] = false;
 	}
 	
+	/**
+	 * Returns "Cruiser", indicating that this is a Cruiser.
+	 * 
+	 * @return the String "Cruiser"
+	 */
 	@Override
 	public String getShipType() {
 		return "Cruiser";

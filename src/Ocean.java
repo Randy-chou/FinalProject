@@ -8,12 +8,17 @@ import java.util.Random;
  *
  */
 public class Ocean implements OceanInterface {
-	
+
 	/**
 	 * A 10x10 2D array of Ships, which can be used to quickly determine which ship
 	 * is in any given location.
 	 */
 	protected Ship[][] ships;
+	
+	/**
+	 * A 10x10 2D array of boolean values, which can be used to quickly determine if
+	 * a location has been shot at before
+	 */
 	protected boolean[][] shots;
 
 	/**
@@ -45,9 +50,9 @@ public class Ocean implements OceanInterface {
 		shotsFired = 0;
 		hitCount = 0;
 		shipsSunk = 0;
-		// Fill ocean with empty 
-		for(int i = 0 ; i < 10 ; i++) {
-			for(int j = 0 ; j < 10 ; j++) {
+		// Fill ocean with empty
+		for (int i = 0; i < 10; i++) {
+			for (int j = 0; j < 10; j++) {
 				ships[i][j] = new EmptySea();
 				shots[i][j] = false;
 			}
@@ -67,24 +72,24 @@ public class Ocean implements OceanInterface {
 		int startLoc = (int) (Math.random() * 100);
 		int[] coords = new int[2];
 		int count = 0;
-		//Place 1 battleship
-		while(true) {
+		// Place 1 battleship
+		while (true) {
 			Battleship battleship = new Battleship();
 			horiz = random.nextBoolean();
 			coords = translateCoord(startLoc);
-			if(battleship.okToPlaceShipAt(coords[0], coords[1], horiz, this)) {
+			if (battleship.okToPlaceShipAt(coords[0], coords[1], horiz, this)) {
 				battleship.placeShipAt(coords[0], coords[1], horiz, this);
 				break;
 			}
 			startLoc++;
 		}
-		//Place 2 cruisers
+		// Place 2 cruisers
 		startLoc = (int) (Math.random() * 100);
-		while(count < 2) {
+		while (count < 2) {
 			Cruiser cruiser = new Cruiser();
 			horiz = random.nextBoolean();
 			coords = translateCoord(startLoc);
-			if(cruiser.okToPlaceShipAt(coords[0], coords[1], horiz, this)) {
+			if (cruiser.okToPlaceShipAt(coords[0], coords[1], horiz, this)) {
 				cruiser.placeShipAt(coords[0], coords[1], horiz, this);
 				startLoc = (int) (Math.random() * 100);
 				coords = translateCoord(startLoc);
@@ -93,14 +98,14 @@ public class Ocean implements OceanInterface {
 			}
 			startLoc++;
 		}
-		//Place 3 destroyers
+		// Place 3 destroyers
 		count = 0;
 		startLoc = (int) (Math.random() * 100);
-		while(count < 3) {
+		while (count < 3) {
 			Destroyer destroyer = new Destroyer();
 			horiz = random.nextBoolean();
 			coords = translateCoord(startLoc);
-			if(destroyer.okToPlaceShipAt(coords[0], coords[1], horiz, this)) {
+			if (destroyer.okToPlaceShipAt(coords[0], coords[1], horiz, this)) {
 				destroyer.placeShipAt(coords[0], coords[1], horiz, this);
 				startLoc = (int) (Math.random() * 100);
 				coords = translateCoord(startLoc);
@@ -109,14 +114,14 @@ public class Ocean implements OceanInterface {
 			}
 			startLoc++;
 		}
-		//Place 4 submarines
+		// Place 4 submarines
 		count = 0;
 		startLoc = (int) (Math.random() * 100);
-		while(count < 4) {
+		while (count < 4) {
 			Submarine submarine = new Submarine();
 			horiz = random.nextBoolean();
 			coords = translateCoord(startLoc);
-			if(submarine.okToPlaceShipAt(coords[0], coords[1], horiz, this)) {
+			if (submarine.okToPlaceShipAt(coords[0], coords[1], horiz, this)) {
 				submarine.placeShipAt(coords[0], coords[1], horiz, this);
 				startLoc = (int) (Math.random() * 100);
 				coords = translateCoord(startLoc);
@@ -127,12 +132,17 @@ public class Ocean implements OceanInterface {
 		}
 	}
 	
-	// Helper function for placing all ships randomly
+	/**
+	 * When given a randomly generated number, parses out the associated row and column values
+	 * 
+	 * @param input    randomly generated int between 0 and 100
+	 * @return an int[] where int[0] is the row value and int[1] is the column value
+	 */
 	private int[] translateCoord(int input) {
 		int[] returnList = new int[2];
-		input = input%100;
-		returnList[0] =  input/10;
-		returnList[1] = input%10;
+		input = input % 100;
+		returnList[0] = input / 10;
+		returnList[1] = input % 10;
 		return returnList;
 	}
 
@@ -146,9 +156,9 @@ public class Ocean implements OceanInterface {
 	 *         {@literal false} otherwise.
 	 */
 	public boolean isOccupied(int row, int column) {
-		if(ships[row][column].getShipType().equals("empty")) {
+		if (ships[row][column].getShipType().equals("empty")) {
 			return false;
-		}else {
+		} else {
 			return true;
 		}
 	}
@@ -171,10 +181,10 @@ public class Ocean implements OceanInterface {
 		boolean before = ships[row][column].isSunk();
 		boolean retVal = ships[row][column].shootAt(row, column);
 		boolean after = ships[row][column].isSunk();
-		if(before != after) {
+		if (before != after) {
 			shipsSunk++;
 		}
-		if(retVal) {
+		if (retVal) {
 			hitCount++;
 		}
 		return retVal;
@@ -206,13 +216,17 @@ public class Ocean implements OceanInterface {
 	 *         {@literal false}.
 	 */
 	public boolean isGameOver() {
-		if(shipsSunk == 10) {
+		if (shipsSunk == 10) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	/**
+	 * When given tile location, returns the ship type at that location
+	 * 
+	 * @param row    the row (0 to 9) in which to shoot
+	 * @param column the column (0 to 9) in which to shoot
 	 * @return ship type at location
 	 */
 	public String getShipType(int row, int column) {
@@ -258,15 +272,15 @@ public class Ocean implements OceanInterface {
 		System.out.println("    0  1  2  3  4  5  6  7  8  9");
 		// Print out rest of board
 		String location = "E";
-		for(int i = 0 ; i < 10 ; i++) {
+		for (int i = 0; i < 10; i++) {
 			System.out.print(" " + i);
-			for(int j = 0 ; j < 10 ; j++) {
+			for (int j = 0; j < 10; j++) {
 				// Check if a shot has been fired at position
-				if(shots[i][j] == false) {
+				if (shots[i][j] == false) {
 					location = ".";
-				}else if(ships[i][j].getShipType().equals("empty")) {
+				} else if (ships[i][j].getShipType().equals("empty")) {
 					location = "-";
-				}else {
+				} else {
 					location = ships[i][j].toString();
 				}
 				System.out.printf("  %s", location);
